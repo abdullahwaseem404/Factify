@@ -1,55 +1,76 @@
-# 📰 Factify
+# 📰 Factify – Fake News Detection System
 
-# Fake News Detection App
+Factify is an end-to-end **Fake News Detection System** that combines traditional machine learning, transformer-based models, and explainable AI to classify news as **Real or Fake**.
 
-A machine learning-based Fake News Detection system built with **Python**, **NLTK**, and **Scikit-learn**, featuring an interactive **Streamlit web app** for real-time predictions.
-
-Working Demo: https://www.youtube.com/watch?v=9hqxtRogcA8
+---
 
 ## 🚀 Features
-- Detects whether news text is **Real** or **Fake**
-- Advanced text preprocessing (HTML removal, lemmatization, stopword filtering)
-- Multiple ML models evaluated (Logistic Regression, Naive Bayes, SVM)
-- Best-performing model (SVM) deployed
-- Interactive and user-friendly Streamlit UI
-- Visual text analysis (WordCloud, frequency plots, distributions)
 
-## 🧠 Machine Learning Pipeline
-1. Text Cleaning & Preprocessing using NLTK and BeautifulSoup  
-2. Feature Extraction with **TF-IDF Vectorizer**  
-3. Model Training & Evaluation  
-4. Model Selection based on Accuracy & F1-score  
-5. Deployment using Streamlit  
+* 🧠 Transformer-based classification (BERT / DistilBERT)
+* 📊 Traditional ML models (TF-IDF + Logistic Regression, Naive Bayes, SVM)
+* 🧹 Advanced text preprocessing (cleaning, tokenization, lemmatization)
+* 🔍 Explainability using SHAP
+* 🌐 Interactive Streamlit web app
+* 📈 Model evaluation metrics (Accuracy, Precision, Recall, F1)
 
-## 📊 Model Performance
-| Model | Accuracy |
-|------|----------|
-| Logistic Regression | 98.9% |
-| Naive Bayes | 95.9% |
-| **SVM** | **99.7%** |
+---
 
-## 🛠️ Tech Stack
-- Python
-- Pandas
-- NLTK
-- BeautifulSoup
-- Scikit-learn
-- Streamlit
-- Matplotlib & Seaborn
-- WordCloud
+## 🧠 Models Used
+### 🔹 Transformer Models
+* BERT / DistilBERT (HuggingFace Transformers)
+* Fine-tuned for binary classification (Real vs Fake)
+### 🔹 Traditional ML
+* Logistic Regression
+* Naive Bayes
+* Support Vector Machine (SVM)
 
-## ▶️ How to Run the App
-1. Clone the repository:
-```bash
-   git clone https://github.com/abdullahwaseem404/Factify.git
-````
-2. Install required libraries:
-```bash
-   pip install -r requirements.txt
+---
+
+## ⚙️ Installation
+
+```bash id="fact2"
+git clone https://github.com/abdullahwaseem404/Factify.git
+pip install -r requirements.txt
 ```
-3. Run the Streamlit app:
-```bash
-   streamlit run app.py
+
+---
+
+## ▶️ Usage
+
+### Run Web App
+
+```bash id="fact4"
+streamlit run app.py
 ```
-## ⚠️ Disclaimer
-This project is for educational and research purposes only. Predictions should not be considered definitive or used as a sole source for news verification.
+
+---
+
+## 🧹 Text Preprocessing
+
+* Lowercasing
+* HTML removal (BeautifulSoup)
+* URL & number removal
+* Tokenization (NLTK)
+* Stopword removal
+* Lemmatization
+
+---
+
+
+## 📊 Evaluation Metrics
+
+* Accuracy
+* Precision
+* Recall
+* F1 Score
+* ROC-AUC
+
+---
+
+## 🌐 Streamlit App
+
+* Input news text
+* Predict Real vs Fake
+* Displays confidence score
+
+---
