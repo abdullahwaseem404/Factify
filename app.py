@@ -1,52 +1,46 @@
 import streamlit as st
-import pickle
-import re
-import nltk
-from bs4 import BeautifulSoup
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
-from nltk.tokenize import word_tokenize
+import torch
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+from my_preprocessing import clean_text
 
-nltk.download("punkt")
-nltk.download("stopwords")
-nltk.download("wordnet")
+MODEL_PATH = "bert-base-uncased"
 
-stop_words = set(stopwords.words("english"))
-lemmatizer = WordNetLemmatizer()
+@st.cache_resource
+def load_model():
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
+    model = AutoModelForSequenceClassification.from_pretrained(MODEL_PATH)
+    return tokenizer, model
 
-def clean_text(text):
-    text = text.lower()
-    text = BeautifulSoup(text, "html.parser").get_text()
-    text = re.sub(r"http\S+|www\S+", "", text)
-    text = re.sub(r"\d+", "", text)
-    text = re.sub(r"[^a-z\s]", " ", text)
-    tokens = word_tokenize(text)
-    tokens = [t for t in tokens if t not in stop_words]
-    tokens = [lemmatizer.lemmatize(t) for t in tokens]
-    return " ".join(tokens)
+tokenizer, model = load_model()
 
-with open("model.pkl", "rb") as f:
-    model = pickle.load(f)
+st.set_page_config(page_title="Factify", layout="centered")
 
-with open("vectorizer.pkl", "rb") as f:
-    vectorizer = pickle.load(f)
+st.title("📰 Factify – Fake News Detector")
+st.write("Detect whether a news article is **Real or Fake** using AI")
 
-st.set_page_config(page_title="Fake News Detector", layout="centered")
-
-st.title("📰 Fake News Detection App")
-st.write("Enter a news article or headline below to check whether it is **Real** or **Fake**.")
-
-user_input = st.text_area("News Text", height=200)
+text = st.text_area("Enter News Text", height=200)
 
 if st.button("Predict"):
-    if user_input.strip() == "":
-        st.warning("Please enter some text.")
+    if text.strip() == "":
+        st.warning("Please enter text")
     else:
-        cleaned = clean_text(user_input)
-        vec = vectorizer.transform([cleaned])
-        prediction = model.predict(vec)[0]
+        cleaned = clean_text(text)
 
-        if prediction == "Fake":
-            st.error("🚨 This news is likely **FAKE**")
+        inputs = tokenizer(
+            cleaned,
+            return_tensors="pt",
+            truncation=True,
+            padding=True
+        )
+
+        with torch.no_grad():
+            outputs = model(**inputs)
+            probs = torch.softmax(outputs.logits, dim=1)
+            pred = torch.argmax(probs).item()
+
+        if pred == 0:
+            st.error("🚨 Fake News")
         else:
-            st.success("✅ This news appears to be **REAL**")
+            st.success("✅ Real News")
+
+        st.write("Confidence:", probs.tolist())
